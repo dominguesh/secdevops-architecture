@@ -1,11 +1,11 @@
 ---
 name: scaffold-infra
-description: "Generates the Dockerfiles and docker-compose.dev.yml file for the Kanban local development environment."
+description: "Generates the Dockerfiles and docker-compose.dev.yml file for the webapp-1 local development environment."
 ---
 
 # Scaffold Infrastructure Skill
 
-When invoked, your task is to generate the local development infrastructure for our Kanban application.
+When invoked, your task is to generate the local development infrastructure for our webapp-1 reference application (copy the pattern as webapp-2, etc.).
 
 ## 1. Create docker-compose.dev.yml
 
@@ -22,4 +22,4 @@ Create a `docker-compose.dev.yml` at the project root with the following service
 
 ## 3. Network
 
-- Connect all three services securely to a custom bridge network called `kanban_network`.
+- Connect all three services securely to a custom bridge network called `webapp1_network` (use `webapp2_network` for a second stack, etc.).

@@ -1,5 +1,5 @@
 ---
-description: "Core technology stack, design patterns, and infrastructure rules for the Kanban app"
+description: "Core technology stack, design patterns, and infrastructure rules for the webapp-1 reference app"
 globs: "**/*"
 alwaysApply: true
 ---

@@ -33,7 +33,7 @@ This matrix maps **controls** in this repository to **mechanisms** and **locatio
 |----|---------|------------------|----------|
 | NET-1 | Database not bound to host by default | No `ports` on `db` in base `docker-compose.dev.yml` | `docker-compose.dev.yml` |
 | NET-2 | Optional explicit DB exposure for GUI tools | Overlay `docker-compose.dev.db-host.yml` publishes `5432` only when merged | `docker-compose.dev.db-host.yml` |
-| NET-3 | Internal service discovery | Services on `kanban_network`; DNS names `frontend`, `backend`, `db` | Compose files |
+| NET-3 | Internal service discovery | Services on `webapp1_network`; DNS names `frontend`, `backend`, `db` | Compose files |
 
 ---
 

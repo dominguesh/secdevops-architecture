@@ -2,7 +2,7 @@
 
 **Secure, reproducible container architecture and DevSecOps harness** — with explicit policy boundaries for AI-assisted engineering. Intended as a **professional portfolio** artifact for solutions architecture and security-oriented engineering roles.
 
-This repository is **primarily the platform**: Docker/Compose patterns, hardened production images, documentation, and **policy-as-code** in the editor (rules, hooks, skills). A **reference web workload** (Kanban-style frontend/backend) ships here to demonstrate end-to-end wiring; it is **not** the core thesis of the repo.
+This repository is **primarily the platform**: Docker/Compose patterns, hardened production images, documentation, and **policy-as-code** in the editor (rules, hooks, skills). A **reference web workload** named **webapp-1** (generic frontend/backend — duplicate the pattern as **webapp-2**, **webapp-3**, etc.) ships here to demonstrate end-to-end wiring; it is **not** the core thesis of the repo.
 
 ---
 
@@ -17,7 +17,7 @@ Hiring managers and technical reviewers evaluating **systems thinking**, **defen
 | In scope (primary artifacts) | Out of scope as “the product” |
 |------------------------------|-------------------------------|
 | Compose topology, profiles, overlays, health ordering | Feature richness of the sample UI/API |
-| `Dockerfile.prod` patterns (non-root, multi-stage, minimal runtime) | Production SaaS operation of Kanban |
+| `Dockerfile.prod` patterns (non-root, multi-stage, minimal runtime) | Production SaaS operation of the sample webapp |
 | `.cursor/` rules, **hooks** (secrets), **skills** (e.g. env health) | Business logic beyond demonstration |
 | `docs/` architecture and **controls matrix** | — |
 
@@ -44,7 +44,7 @@ flowchart TB
   policy -.-> compose
 ```
 
-- **Development:** `docker compose -f docker-compose.dev.yml` — bridge network `kanban_network`, bind mounts for hot reload, **Postgres not published** on the host by default (reduced surface).
+- **Development:** `docker compose -f docker-compose.dev.yml` — bridge network `webapp1_network`, bind mounts for hot reload, **Postgres not published** on the host by default (reduced surface).
 - **Production images:** multi-stage frontend (static → **unprivileged nginx**); API on **Alpine**, **`npm ci`**, **`USER node`** (see `docs/ARCHITECTURE.md`).
 - **Optional:** `dev-workstation` (Compose **profile `tools`**) — SSH/tools container; **not** the app server.
 

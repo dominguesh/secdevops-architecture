@@ -4,14 +4,14 @@ This document describes the **Docker-based development setup**, **production** i
 
 ### Portfolio scope
 
-The **primary artifacts** are the **platform**: Compose, Dockerfiles (dev/prod), `.cursor/` policy (rules, hooks, skills), and documentation. The **Kanban-style frontend and backend** in `frontend/` and `backend/` are a **reference workload** to exercise the stack end-to-end—they are not positioned as the main product of this repository (see root [README.md](../README.md)). Additional web applications can attach to PostgreSQL later using **isolated databases or schemas**; that evolution is **planned** and labeled as such in [CONTROLS.md](CONTROLS.md).
+The **primary artifacts** are the **platform**: Compose, Dockerfiles (dev/prod), `.cursor/` policy (rules, hooks, skills), and documentation. The **webapp-1** reference frontend and backend in `frontend/` and `backend/` are a **generic workload** to exercise the stack end-to-end—they are not positioned as the main product of this repository (see root [README.md](../README.md)). Copy the pattern as **webapp-2**, **webapp-3**, etc., when adding more apps. Additional applications can attach to PostgreSQL later using **isolated databases or schemas**; that evolution is **planned** and labeled as such in [CONTROLS.md](CONTROLS.md).
 
 ---
 
 ## 1. High-level architecture
 
 - **Reference application:** React (Vite) frontend, Node (Express) backend, PostgreSQL database.
-- **Local development:** Docker Compose runs the stack on a custom bridge network (`kanban_network`). Source code is bind-mounted so edits on the host appear inside containers (hot reload).
+- **Local development:** Docker Compose runs the stack on a custom bridge network (`webapp1_network`). Source code is bind-mounted so edits on the host appear inside containers (hot reload).
 - **Production (images):** Multi-stage / hardened Dockerfiles under `frontend/` and `backend/` (`Dockerfile.prod`); static frontend served by unprivileged nginx; API runs as non-root `node` on Alpine-based images (see section 6).
 
 Optional **role separation** you may use operationally:
@@ -60,7 +60,7 @@ flowchart LR
 
 | Service | Image / build | Published ports (host) | Purpose |
 |---------|----------------|---------------------------|---------|
-| **frontend** | `frontend/Dockerfile.dev` | **5173** | Vite dev server; Kanban **web UI**. |
+| **frontend** | `frontend/Dockerfile.dev` | **5173** | Vite dev server; **webapp-1** UI. |
 | **backend** | `backend/Dockerfile.dev` | **3000** | Express API. |
 | **db** | `postgres:16-alpine` | *(none by default)* | PostgreSQL; reachable as **`db:5432`** from other services. |
 | **dev-workstation** | root `Dockerfile.dev` | **2222 → 22** (SSH) | Optional Linux shell + tools; **not** the Vite server. |
@@ -83,7 +83,7 @@ docker compose -f docker-compose.dev.yml --profile tools up -d
 
 ### 3.4 Optional: Postgres on the host (`localhost:5432`)
 
-By default **PostgreSQL is not exposed** on the host — only containers on `kanban_network` can connect. This reduces attack surface.
+By default **PostgreSQL is not exposed** on the host — only containers on `webapp1_network` can connect. This reduces attack surface.
 
 To expose the DB for tools like DBeaver:
 
@@ -98,7 +98,7 @@ docker compose -f docker-compose.dev.yml -f docker-compose.dev.db-host.yml up -d
 
 ### 3.6 Networks
 
-- All listed services attach to **`kanban_network`** (bridge). Service DNS names: **`frontend`**, **`backend`**, **`db`**.
+- All listed services attach to **`webapp1_network`** (bridge). Service DNS names: **`frontend`**, **`backend`**, **`db`**.
 
 ### 3.7 Volumes
 
@@ -115,10 +115,10 @@ docker compose -f docker-compose.dev.yml -f docker-compose.dev.db-host.yml up -d
 
 | Endpoint | URL / connection |
 |----------|------------------|
-| Kanban UI (Vite) | `http://localhost:5173` |
+| webapp-1 UI (Vite) | `http://localhost:5173` |
 | API | `http://localhost:3000` |
-| Postgres from another container | Host **`db`**, port **5432**, user/db/password **`kanban`** (see `docker-compose.dev.yml`). |
-| Postgres from host | Not available unless you use **`docker-compose.dev.db-host.yml`**; alternative: `docker compose exec db psql -U kanban -d kanban`. |
+| Postgres from another container | Host **`db`**, port **5432**, user/db/password **`webapp1`** (see `docker-compose.dev.yml`; Postgres identifiers omit the hyphen). |
+| Postgres from host | Not available unless you use **`docker-compose.dev.db-host.yml`**; alternative: `docker compose exec db psql -U webapp1 -d webapp1`. |
 
 Backend reads **`DATABASE_URL`** and **`PORT`** (see `backend/app.js`). Defaults are set in Compose for local dev.
 
@@ -135,8 +135,8 @@ Backend reads **`DATABASE_URL`** and **`PORT`** (see `backend/app.js`). Defaults
 Build examples (context = app directory):
 
 ```bash
-docker build -f backend/Dockerfile.prod backend -t kanban-api:prod
-docker build -f frontend/Dockerfile.prod frontend -t kanban-web:prod
+docker build -f backend/Dockerfile.prod backend -t webapp1-api:prod
+docker build -f frontend/Dockerfile.prod frontend -t webapp1-web:prod
 ```
 
 ---
@@ -183,6 +183,7 @@ Document the chosen model when adding a second application so portfolio readers 
 
 ## 10. Changelog (documentation-relevant)
 
+- **Naming:** sample app branded **webapp-1**; Docker/Postgres identifiers use **`webapp1`** (no hyphen); bridge network **`webapp1_network`**.
 - **Compose profile `tools`:** optional **dev-workstation**; default `up` runs app + DB only.
 - **Postgres:** host port **5432** removed by default; optional **`docker-compose.dev.db-host.yml`** overlay.
 - **Healthcheck + `depends_on`:** backend waits for **healthy** Postgres.

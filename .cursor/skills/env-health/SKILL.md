@@ -1,6 +1,6 @@
 ---
 name: env-health
-description: Verifies local Docker Compose dev stack health and basic repo security hygiene for this Kanban project. Use when the user asks for an environment health check, pre-flight, dev sanity check, secure setup verification, or before deploy/feature work; also when validating that frontend, backend, and db match docs/ARCHITECTURE.md.
+description: Verifies local Docker Compose dev stack health and basic repo security hygiene for this webapp-1 reference project. Use when the user asks for an environment health check, pre-flight, dev sanity check, secure setup verification, or before deploy/feature work; also when validating that frontend, backend, and db match docs/ARCHITECTURE.md.
 ---
 
 # Environment health and security (local dev)
@@ -29,7 +29,7 @@ Run these unless the user has already provided equivalent output:
    - Backend (Express): `curl -sf http://127.0.0.1:3000/` → expect body indicating API is alive (e.g. current root handler).
 
 3. **Database readiness** (from host)
-   - Preferred: `docker compose -f docker-compose.dev.yml exec -T db pg_isready -U kanban -d kanban` → exit **0**.
+   - Preferred: `docker compose -f docker-compose.dev.yml exec -T db pg_isready -U webapp1 -d webapp1` → exit **0**.
    - If **db** is not running, note it before other DB checks.
 
 4. **Optional Postgres on host**

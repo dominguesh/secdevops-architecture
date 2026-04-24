@@ -1,4 +1,4 @@
-# Kanban local development
+# webapp-1 local development (Postgres user/db: webapp1 — use webapp2 for a second stack, etc.)
 #
 # Default stack (app + DB on the internal Docker network):
 #   docker compose -f docker-compose.dev.yml up -d
@@ -24,7 +24,7 @@ services:
       # Linux / WSL: uncomment to drive the host Docker daemon from inside this container
       # - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - kanban_network
+      - webapp1_network
 
   frontend:
     build:
@@ -35,7 +35,7 @@ services:
     volumes:
       - ./frontend:/app
     networks:
-      - kanban_network
+      - webapp1_network
 
   backend:
     build:
@@ -49,25 +49,25 @@ services:
       db:
         condition: service_healthy
     environment:
-      POSTGRES_USER: kanban
-      POSTGRES_PASSWORD: kanban
-      POSTGRES_DB: kanban
-      DATABASE_URL: postgresql://kanban:kanban@db:5432/kanban
+      POSTGRES_USER: webapp1
+      POSTGRES_PASSWORD: webapp1
+      POSTGRES_DB: webapp1
+      DATABASE_URL: postgresql://webapp1:webapp1@db:5432/webapp1
     networks:
-      - kanban_network
+      - webapp1_network
 
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: kanban
-      POSTGRES_PASSWORD: kanban
-      POSTGRES_DB: kanban
+      POSTGRES_USER: webapp1
+      POSTGRES_PASSWORD: webapp1
+      POSTGRES_DB: webapp1
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - kanban_network
+      - webapp1_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kanban -d kanban"]
+      test: ["CMD-SHELL", "pg_isready -U webapp1 -d webapp1"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -77,5 +77,5 @@ volumes:
   postgres_data:
 
 networks:
-  kanban_network:
+  webapp1_network:
     driver: bridge
