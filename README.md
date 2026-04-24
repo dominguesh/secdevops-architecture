@@ -1,4 +1,4 @@
-# secdevops-architecture
+# DevSecOps Architecture for Self-Hosting Webapps
 
 **Secure, reproducible container architecture and DevSecOps harness**, with explicit policy boundaries for AI-assisted engineering. Intended as a **professional portfolio** artifact for solutions architecture and security-oriented engineering roles.
 
@@ -8,7 +8,7 @@ This repository is **primarily the platform**: Docker/Compose patterns, hardened
 
 ## Audience
 
-Hiring managers and technical reviewers evaluating **systems thinking**, **defense-in-depth**, **supply-chain-aware delivery**, and **traceable automation** (what is enforced vs documented).
+Cybersecurity and DevSecOps enthusiasts **systems thinking**, **defense-in-depth**, **supply-chain-aware delivery**, and **traceable automation** (what is enforced vs documented).
 
 ---
 
