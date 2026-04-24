@@ -1,8 +1,8 @@
 # secdevops-architecture
 
-**Secure, reproducible container architecture and DevSecOps harness** — with explicit policy boundaries for AI-assisted engineering. Intended as a **professional portfolio** artifact for solutions architecture and security-oriented engineering roles.
+**Secure, reproducible container architecture and DevSecOps harness**, with explicit policy boundaries for AI-assisted engineering. Intended as a **professional portfolio** artifact for solutions architecture and security-oriented engineering roles.
 
-This repository is **primarily the platform**: Docker/Compose patterns, hardened production images, documentation, and **policy-as-code** in the editor (rules, hooks, skills). A **reference web workload** named **webapp-1** (generic frontend/backend — duplicate the pattern as **webapp-2**, **webapp-3**, etc.) ships here to demonstrate end-to-end wiring; it is **not** the core thesis of the repo.
+This repository is **primarily the platform**: Docker/Compose patterns, hardened production images, documentation, and **policy-as-code** in the editor (rules, hooks, skills). A **reference web workload** named **webapp-1** (generic frontend/backend; duplicate the pattern as **webapp-2**, **webapp-3**, etc.) ships here to demonstrate end-to-end wiring; it is **not** the core thesis of the repo.
 
 ---
 
