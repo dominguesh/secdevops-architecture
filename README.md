@@ -46,6 +46,7 @@ flowchart TB
 
 - **Development:** `docker compose -f docker-compose.dev.yml` — bridge network `webapp1_network`, bind mounts for hot reload, **Postgres not published** on the host by default (reduced surface).
 - **Production images:** multi-stage frontend (static → **unprivileged nginx**); API on **Alpine**, **`npm ci`**, **`USER node`** (see `docs/ARCHITECTURE.md`).
+- **Portfolio hosting posture:** **self-hosted** runtime and **identity-aware edge** using **[Pangolin](https://pangolin.net/)** (tunneled **reverse proxy**, **zero-trust–style** access) rather than defaulting to cloud PaaS — foregrounds **control**, **security skills**, and an **auditable** access path ([architecture §1.1](docs/ARCHITECTURE.md#11-portfolio-deployment-posture-pangolin-reverse-proxy-and-zero-trust), [Pangolin docs](https://docs.pangolin.net/)).
 - **Optional:** `dev-workstation` (Compose **profile `tools`**) — SSH/tools container; **not** the app server.
 
 ---
@@ -71,7 +72,7 @@ Full matrix: **[docs/CONTROLS.md](docs/CONTROLS.md)**.
 1. **Develop** — Compose up; inject secrets via **1Password** (`op`) or env files **never committed**.
 2. **Enforce** — Hooks block risky secret patterns in shell and **Write** payloads.
 3. **Verify** — Invoke **`env-health`** skill for Compose/HTTP/DB checks (see skill file).
-4. **Ship** — Build prod images from `frontend/` and `backend/` directories; align runtime secrets with your platform (Vault, SM, K8s secrets, etc.).
+4. **Ship** — Build prod images from `frontend/` and `backend/` directories; place them behind your **self-hosted Pangolin / reverse-proxy edge** and align runtime secrets with your platform (Vault, SM, K8s secrets, etc.).
 
 ---
 
@@ -114,7 +115,7 @@ Optional: `--profile tools` for **dev-workstation**; merge **`docker-compose.dev
 
 | Document | Purpose |
 |----------|---------|
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Topology, volumes, prod images, secrets conventions |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Topology, volumes, prod images, secrets conventions, **self-hosted Pangolin / ZTNA-style edge** (§1.1) |
 | [docs/CONTROLS.md](docs/CONTROLS.md) | Security / engineering controls matrix |
 | [docs/GITHUB_METADATA.md](docs/GITHUB_METADATA.md) | Suggested GitHub description, topics, About text |
 

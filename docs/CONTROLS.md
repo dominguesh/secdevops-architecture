@@ -66,7 +66,17 @@ This matrix maps **controls** in this repository to **mechanisms** and **locatio
 
 ---
 
-## 7. Planned (not yet implemented here)
+## 7. Runtime access edge (self-hosted portfolio)
+
+| ID | Control | Implementation | Evidence |
+|----|---------|----------------|----------|
+| EDGE-1 | Self-hosted deployment narrative (control and auditability) | Documented preference for **self-hosted** operations vs cloud PaaS as the default portfolio story | [docs/ARCHITECTURE.md](ARCHITECTURE.md) §1.1 |
+| EDGE-2 | Identity-aware / tunneled reverse proxy (Pangolin) | **Pangolin** as access and publication layer; deny-by-default publication model per vendor docs | [docs/ARCHITECTURE.md](ARCHITECTURE.md) §1.1; [Pangolin documentation](https://docs.pangolin.net/) |
+| EDGE-3 | Zero-trust access principles | Explicit identity/policy-driven access; complements policy-as-code in `.cursor/` | [docs/ARCHITECTURE.md](ARCHITECTURE.md) §1.1 |
+
+---
+
+## 8. Planned (not yet implemented here)
 
 | ID | Planned control | Notes |
 |----|-----------------|-------|

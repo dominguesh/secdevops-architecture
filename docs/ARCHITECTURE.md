@@ -6,6 +6,8 @@ This document describes the **Docker-based development setup**, **production** i
 
 The **primary artifacts** are the **platform**: Compose, Dockerfiles (dev/prod), `.cursor/` policy (rules, hooks, skills), and documentation. The **webapp-1** reference frontend and backend in `frontend/` and `backend/` are a **generic workload** to exercise the stack end-to-end—they are not positioned as the main product of this repository (see root [README.md](../README.md)). Copy the pattern as **webapp-2**, **webapp-3**, etc., when adding more apps. Additional applications can attach to PostgreSQL later using **isolated databases or schemas**; that evolution is **planned** and labeled as such in [CONTROLS.md](CONTROLS.md).
 
+**Portfolio deployment intent:** the production story for this repository is **self-hosted** access and runtime control—using **[Pangolin](https://pangolin.net/)** as the **identity-aware, tunneled reverse-proxy / ZTNA-style edge** (see [Pangolin documentation](https://docs.pangolin.net/)) instead of treating a generic **cloud PaaS** as the default hosting answer. That choice foregrounds **security-oriented design**, **demonstrable skills**, and **operational control** (details in §1.1 below).
+
 ---
 
 ## 1. High-level architecture
@@ -30,6 +32,39 @@ flowchart LR
   end
   Browser[Browser / API client] --> FE
   Browser --> BE
+```
+
+### 1.1 Portfolio deployment posture: Pangolin, reverse proxy, and zero trust
+
+This section records a deliberate **hosting and access model** for portfolio reviewers: **self-host the environment** and publish workloads through **Pangolin**, a **reverse-proxy–oriented, identity-aware access layer**, using **zero-trust principles** as the narrative bridge between “secure defaults in code” and “secure defaults at the edge.”
+
+**Why self-hosting (vs cloud-first PaaS as the default story):** managed platforms are valid operationally, but they can hide **where trust boundaries sit** and how **access is granted**. Running your own edge and stacks makes **control** explicit: you choose **what is exposed**, **to whom**, and **how identity is enforced**—which maps cleanly to solutions-architecture and security-engineering interviews.
+
+**Pangolin** is positioned here as the **self-hosted access and publication plane**: an **identity-aware** platform that combines **reverse proxy** capabilities with **tunnel-oriented** connectivity patterns (so internal services are not casually bound to the public Internet). Product behavior and deployment modes evolve; treat **[Pangolin documentation](https://docs.pangolin.net/)** as the source of truth for features (connectors, sites, identity providers, etc.). At the architectural level, Pangolin supports a **deny-by-default** mental model: **nothing is meaningfully reachable until you define and attach access policy** to a published application.
+
+**Reverse proxy** responsibilities at this layer (whether expressed entirely inside Pangolin or alongside it): **TLS termination**, **host/path routing** to upstream services, and a **single ingress discipline** in front of the **webapp-1** containers built from this repo (`Dockerfile.prod` images). The workloads remain **small, non-root, and composable**; the edge carries **authentication, authorization context, and publication policy**.
+
+**Zero trust** (as used in this portfolio): **no implicit trust from “on-network” location alone**; access is **identity- and policy-driven**, **least-privilege**, and **explicitly granted** per resource. That parallels **policy-as-code** in `.cursor/` (rules, hooks, skills): security is expressed as **repeatable controls**—here extended to **who may open a path to the app at all**.
+
+**Skills and signals showcased:** designing for **segmented exposure**, **self-hosted operations**, **inspectable ingress**, and **traceable** security decisions—complementing the DevSecOps automation story in the repository.
+
+```mermaid
+flowchart TB
+  subgraph edge [Self-hosted access edge]
+    P[Pangolin identity and policy]
+    RP[Reverse proxy ingress]
+  end
+  subgraph stack [Container runtime - webapp-1]
+    FE[Frontend]
+    BE[API]
+    DB[(PostgreSQL)]
+    FE --> BE
+    BE --> DB
+  end
+  Client[Authenticated client] --> P
+  P --> RP
+  RP --> FE
+  RP --> BE
 ```
 
 ---
@@ -126,6 +161,8 @@ Backend reads **`DATABASE_URL`** and **`PORT`** (see `backend/app.js`). Defaults
 
 ## 5. Production images (summary)
 
+Production images below are intended to run **behind** the **self-hosted Pangolin / reverse-proxy edge** described in **§1.1** (not directly exposed without an access policy). Build and pin versions per your environment; wire upstream URLs and TLS at the edge.
+
 | Artifact | Notes |
 |----------|--------|
 | **`backend/Dockerfile.prod`** | `node:22-alpine`, **`npm ci --omit=dev`**, **`USER node`**, exposes **3000**. |
@@ -183,6 +220,7 @@ Document the chosen model when adding a second application so portfolio readers 
 
 ## 10. Changelog (documentation-relevant)
 
+- **Hosting posture:** portfolio deployment narrative uses **self-hosted [Pangolin](https://pangolin.net/)** with **reverse proxy** ingress and **zero-trust** access principles ([docs](https://docs.pangolin.net/)); see **§1.1**.
 - **Naming:** sample app branded **webapp-1**; Docker/Postgres identifiers use **`webapp1`** (no hyphen); bridge network **`webapp1_network`**.
 - **Compose profile `tools`:** optional **dev-workstation**; default `up` runs app + DB only.
 - **Postgres:** host port **5432** removed by default; optional **`docker-compose.dev.db-host.yml`** overlay.
