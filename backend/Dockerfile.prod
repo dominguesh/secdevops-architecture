@@ -1,0 +1,19 @@
+# Production API — Alpine, reproducible installs, non-root runtime
+FROM node:22-alpine AS production
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY package.json package-lock.json ./
+
+RUN npm ci --omit=dev \
+  && npm cache clean --force
+
+COPY --chown=node:node app.js ./
+
+USER node
+
+EXPOSE 3000
+
+CMD ["node", "app.js"]

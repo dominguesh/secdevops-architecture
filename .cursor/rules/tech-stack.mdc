@@ -1,0 +1,29 @@
+---
+description: "Core technology stack, design patterns, and infrastructure rules for the Kanban app"
+globs: "**/*"
+alwaysApply: true
+---
+
+# Tech Stack & Architecture Rules
+
+## Frontend
+
+- Framework: React.js (Vite build tool)
+- UI Library: Material UI (MUI)
+- Pattern: Build modular, accessible components.
+
+## Backend
+
+- Framework: Node.js with Express
+- API Style: RESTful endpoints serving JSON.
+
+## Database
+
+- Engine: PostgreSQL
+- Persistence: Always use named Docker volumes for database data.
+
+## Infrastructure & Docker (Mac M2 Max & Windows WSL 2 Compatibility)
+
+- Architecture: Always prefer native `arm64` container images for Apple Silicon compatibility. Do not force `amd64` emulation unless strictly necessary.
+- Volumes: Use relative bind mounts for local development to enable hot-reloading (e.g., `./frontend:/app`).
+- File Sharing: Design for VirtioFS on Mac and the Linux filesystem on Windows WSL 2.

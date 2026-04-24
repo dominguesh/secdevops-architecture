@@ -1,0 +1,17 @@
+# Secrets — use 1Password inject / CI vars; never commit real values
+.env
+.env.*
+!.env.example
+
+# Dependencies & build output
+**/node_modules/
+**/dist/
+**/build/
+
+# Logs & OS noise
+*.log
+.DS_Store
+
+# Python
+**/__pycache__/
+*.pyc

@@ -1,0 +1,22 @@
+---
+description: "Global DevSecOps and security guardrails for application code and Docker infrastructure."
+globs: "**/*"
+alwaysApply: true
+---
+
+# DevSecOps & Security Standards
+
+## Docker & Infrastructure
+
+- **Local Development (Relaxed):** It is acceptable to run containers as `root` and use extensive bind mounts (like `./frontend:/app`) to enable hot-reloading and ease of local development.
+- **Production (Strict):** When generating production `Dockerfile.prod` configurations, always use multi-stage builds, enforce a non-root user (e.g., `USER node`), and drop unnecessary Linux capabilities.
+
+## Agents & Subagents
+
+- When spawning a **security review** subagent (Task or `@security-reviewer`), prefer **`model: fast`** for responsive audits unless a deeper review explicitly requires a larger model.
+
+## Application Code (Strict)
+
+- Always follow OWASP Top 10 guidelines.
+- Never hardcode secrets, API keys, or passwords. Always extract them from environment variables (`process.env`).
+- Always sanitize and validate user inputs before processing them or interacting with the PostgreSQL database.

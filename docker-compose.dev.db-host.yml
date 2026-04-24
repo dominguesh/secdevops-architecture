@@ -1,0 +1,10 @@
+# Merge overlay: publishes Postgres on the host at localhost:5432 for external GUI clients.
+# Prefer keeping Postgres off the host surface when you only use the backend container.
+#
+# Usage:
+#   docker compose -f docker-compose.dev.yml -f docker-compose.dev.db-host.yml up -d
+
+services:
+  db:
+    ports:
+      - "5432:5432"

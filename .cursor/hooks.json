@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": "bash .cursor/hooks/scan-secrets.sh",
+        "type": "command",
+        "failClosed": true
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": "bash .cursor/hooks/scan-secrets-pre-write.sh",
+        "type": "command",
+        "matcher": "Write",
+        "failClosed": true
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "bash .cursor/hooks/scan-secrets-after-edit.sh",
+        "type": "command",
+        "matcher": "Write",
+        "failClosed": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+# Dependencies & build outputs (smaller Docker build context)
+**/node_modules
+**/dist
+**/build
+**/.next
+**/coverage
+
+# Version control & IDE
+.git
+.cursor
+
+# Logs & env files (never bake secrets into images)
+**/*.log
+**/.env
+**/.env.*

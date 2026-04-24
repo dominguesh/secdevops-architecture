@@ -1,0 +1,81 @@
+# Kanban local development
+#
+# Default stack (app + DB on the internal Docker network):
+#   docker compose -f docker-compose.dev.yml up -d
+#
+# Optional Linux SSH/tools container (heavier — enable when needed):
+#   docker compose -f docker-compose.dev.yml --profile tools up -d
+#
+# Optional: expose Postgres on localhost:5432 for GUI clients (DBeaver, etc.):
+#   docker compose -f docker-compose.dev.yml -f docker-compose.dev.db-host.yml up -d
+
+services:
+  dev-workstation:
+    container_name: dev-workstation
+    profiles:
+      - tools
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "2222:22"
+    volumes:
+      - .:/workspace
+      # Linux / WSL: uncomment to drive the host Docker daemon from inside this container
+      # - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - kanban_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    networks:
+      - kanban_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRES_USER: kanban
+      POSTGRES_PASSWORD: kanban
+      POSTGRES_DB: kanban
+      DATABASE_URL: postgresql://kanban:kanban@db:5432/kanban
+    networks:
+      - kanban_network
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: kanban
+      POSTGRES_PASSWORD: kanban
+      POSTGRES_DB: kanban
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - kanban_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kanban -d kanban"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+
+volumes:
+  postgres_data:
+
+networks:
+  kanban_network:
+    driver: bridge
